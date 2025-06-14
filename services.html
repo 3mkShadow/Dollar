@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      background: #C4C4C5;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      margin: 0;
+      padding: 20px;
+      overflow-x: hidden; /* لمنع التمرير الأفقي عند القائمة */
+    }
+
+    .users-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .user-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-name-wrapper {
+      background-color: #636363;
+      border-radius: 12px;
+      padding: 8px 15px;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      min-width: 200px;
+      box-shadow: 0 0 10px #636363;
+      text-shadow: 0 0 5px white;
+    }
+
+    .user-card {
+      border: none;
+      padding: 20px;
+      border-radius: 15px;
+      background: #636363;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #636363;
+    }
+
+    .user-card:hover {
+      transform: scale(1.03);
+    }
+
+    .box-name {
+      font-size: 18px;
+      color: white;
+      margin-bottom: 5px;
+      margin-top: 10px;
+      text-align: center;
+      text-shadow: 0 0 5px white;
+    }
+
+    .box-desc {
+      font-size: 14px;
+      color: #f0f0f0;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 0 0 4px white;
+    }
+
+    .box-images {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .box-images img {
+      width: 70px;
+      height: 70px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .no-users {
+      text-align: center;
+      color: #555;
+      font-size: 18px;
+      opacity: 0.7;
+      margin-top: 20px;
+    }
+
+header {
+      background-color: #C4C4C5;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: flex-start; /* الزر يمين أولاً */
+      align-items: center;
+      direction: rtl; /* لتموضع زر الخيارات على اليمين */
+      gap: 10px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #C4C4C5;
+      background-color: #636363;
+      padding: 8px 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #636363;
+      text-shadow: 0 0 5px #C4C4C5;
+      user-select: none;
+    }
+
+    .menu-icon {
+      cursor: pointer;
+      font-size: 30px;
+      color: #C4C4C5;
+      user-select: none;
+      background-color: #636363;
+      padding: 8px 15px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px #636363;
+      transition: background-color 0.3s ease;
+    }
+    .menu-icon:hover {
+      background-color: #555555;
+    }
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0; /* خليه ثابت */
+  width: 250px;
+  height: 100%;
+  background-color: #636363;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+  z-index: 1000;
+  transform: translateX(100%); /* مخفية بالكامل */
+  transition: transform 0.2s ease-out; /* أسرع وأكثر سلاسة */
+  will-change: transform; /* يجهز المتصفح للحركة */
+}
+
+.side-menu.open {
+  transform: translateX(0); /* تظهر القائمة */
+}
+
+    .side-menu a {
+      display: block;
+      margin: 12px 20px;
+      padding: 10px 20px;
+      color: #636363;
+      text-decoration: none;
+      font-size: 18px;
+      background-color: #C4C4C5;
+      border-radius: 18px;
+      box-shadow: 0 0 10px #C4C4C5;
+      text-shadow: 0 0 5px #636363;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    .side-menu a:hover {
+      background-color: #4a4a4a;
+    }
+
+    .content h1,
+    .content p {
+      background-color: #636363;
+      padding: 15px 25px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px #636363;
+      color: #C4C4C5;
+      text-shadow: 0 0 5px #C4C4C5;
+      user-select: none;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    /* لإخفاء الشريط العمودي للتمرير عند فتح القائمة */
+    body.menu-open {
+      overflow-x: hidden;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    <div class="logo">طاقم التصميم</div>
+  </header>
+
+  <!-- القائمة الجانبية -->
+  <nav class="side-menu" id="sideMenu" aria-hidden="true">
+    <a href="/">الصفحة الرئيسية</a>
+    <a href="/services">طاقم التصميم</a>
+    <a href="https://discord.gg/DL-S" target="_blank" rel="noopener noreferrer">سيرفرنا</a>
+  </nav>
+
+  <div id="users-container" class="users-container"></div>
+
+  <script>
+    // كود جلب البيانات وعرضها
+    fetch('/api/users')
+      .then(res => res.json())
+      .then(users => {
+        const container = document.getElementById('users-container');
+        container.innerHTML = '';
+
+        if (!users.length) {
+          container.innerHTML = '<p class="no-users">لا يوجد بيانات للأشخاص حالياً.</p>';
+          return;
+        }
+
+        users.forEach(user => {
+          const userBlock = document.createElement('div');
+          userBlock.className = 'user-block';
+
+          const nameWrapper = document.createElement('div');
+          nameWrapper.className = 'user-name-wrapper';
+          nameWrapper.textContent = user.displayName;
+          userBlock.appendChild(nameWrapper);
+
+          const userCard = document.createElement('div');
+          userCard.className = 'user-card';
+
+          user.boxes.forEach(box => {
+            const boxName = document.createElement('div');
+            boxName.className = 'box-name';
+            boxName.textContent = box.name;
+            userCard.appendChild(boxName);
+
+            const boxDesc = document.createElement('div');
+            boxDesc.className = 'box-desc';
+            boxDesc.textContent = box.desc;
+            userCard.appendChild(boxDesc);
+
+            const imgContainer = document.createElement('div');
+            imgContainer.className = 'box-images';
+
+            box.images.forEach(img => {
+              const imgEl = document.createElement('img');
+              imgEl.src = img;
+              imgContainer.appendChild(imgEl);
+            });
+
+            userCard.appendChild(imgContainer);
+          });
+
+          userBlock.appendChild(userCard);
+          container.appendChild(userBlock);
+        });
+      })
+      .catch(() => {
+        document.getElementById('users-container').innerHTML = '<p class="no-users">حدث خطأ في جلب البيانات.</p>';
+      });
+
+    // كود فتح/غلق القائمة الجانبية
+    const menuBtn = document.getElementById('menuBtn');
+    const sideMenu = document.getElementById('sideMenu');
+
+    function toggleMenu() {
+      const isOpen = sideMenu.classList.toggle('open');
+      sideMenu.setAttribute('aria-hidden', !isOpen);
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+
+    // إغلاق القائمة عند الضغط خارجها (اختياري)
+    document.addEventListener('click', (e) => {
+      if (!sideMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+        sideMenu.classList.remove('open');
+        sideMenu.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    // دعم الفتح والإغلاق عبر لوحة المفاتيح
+    menuBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleMenu();
+      }
+    });
+  </script>
+    <script>
+  const menu = document.getElementById('sideMenu');
+
+  function toggleMenu() {
+    menu.classList.toggle('open');
+    document.body.classList.toggle('menu-open');
+  }
+
+  // إغلاق القائمة عند النقر خارجها
+  document.addEventListener('click', function (e) {
+    const isClickInsideMenu = menu.contains(e.target);
+    const isClickOnMenuIcon = e.target.classList.contains('menu-icon');
+
+    if (!isClickInsideMenu && !isClickOnMenuIcon && menu.classList.contains('open')) {
+      menu.classList.remove('open');
+      document.body.classList.remove('menu-open');
+    }
+  });
+</script>
+</body>
+</html>
